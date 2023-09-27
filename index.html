@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>Poem</title>
+      <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📜</text></svg>">
+  </head>
+<body>
+<div>
+  You've read <span id="count">X</span> poems.
+</div>
+<br>
+<div id="main">
+    Enable Javascript in your browser.
+</div>
+<button id="read" onclick="incrementTotalRead()">Poem Read</button>
+<button id="share" onclick="copyPoem()">Share Poem</button>
+<textarea type="text" id="copybox" style="display: none"></textarea>
+<script src="script.js"></script>
+</body>
+</html>
