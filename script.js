@@ -110,7 +110,7 @@ async function showRandomPoem() {
     let j = await response.json();
     j = j[0];
 
-    if(poems_read.contains(getID(j["author"], j["title"]))) {
+    if(poems_read.includes(await getID(j["author"], j["title"]))) {
         return showRandomPoem();
     }
 
