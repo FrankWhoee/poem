@@ -13,6 +13,9 @@ let curr_read = getCookie("curr_read")
 
 let curr_text = "";
 
+let curr_id = "";
+let curr_title = "";
+
 if (total_read_poems == undefined) {
     total_read_poems = 0;
     writeCookie("total_read_poems", total_read_poems);
@@ -42,10 +45,12 @@ if (curr_poem == undefined || last_time_visited == undefined || today.toDateStri
         let title = res[1];
         curr_read = 0;
 
+        curr_id = id;
+        curr_title = title;
+        
         writeCookie("curr_read", curr_read);
         writeCookie("curr_poem", title);
         writeCookie("last_time_visited", today.getTime());
-        writeCookie("poems_read", poems_read + id + ",");
     });
 } else {
     showPoem(curr_poem);
@@ -102,7 +107,8 @@ async function showPoem(title) {
         main.appendChild(text);
     });
 
-
+    curr_id = await getID(j["author"], j["title"]);
+    curr_title = await j["title"];
 }
 
 async function showRandomPoem() {
@@ -147,6 +153,8 @@ function incrementTotalRead() {
         writeCookie("curr_read", curr_read);
 
         read_button.disabled = true;
+
+        writeCookie("poems_read", poems_read + curr_id + ",");
     }
 }
 
