@@ -65,7 +65,7 @@ function getCookie(name) {
 
 function writeCookie(name, value) {
     console.log("writing cookie");
-    document.cookie = `${name}=${value}`;
+    document.cookie = `${name}=${value};max-age=315360000;`;
 }
 
 // https://poetrydb.org/author/Geoffrey%20Chaucer/author,title
