@@ -1,7 +1,8 @@
 # poem
 Get a random poem everyday.
 
-Go read some poems now!: [https://frankwhoee.com/poem/](https://frankwhoee.com/poem/)
+Go read some poems now!
+[https://frankwhoee.com/poem/](https://frankwhoee.com/poem/)
 
 ### Motivation
 I wanted to read more poems, but there wasn't really a single book that had all of the Western poetry canon.
