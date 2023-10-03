@@ -13,5 +13,5 @@ However, it existed in the form of poetrydb, but it returned JSONs, not suitable
 I at first used cookies instead of local storage, turns out cookies are cleared when you restart the browser on the phone.
 
 ### Future work
-1. Make the share poem button return a link instead of copying the entire poem
+1. ~~Make the share poem button return a link instead of copying the entire poem~~
 2. Make everyone see the same poem, to encourage discussion, but this would require a backend (more complexity?? 😱)
