@@ -168,7 +168,7 @@ function copyPoem() {
     // Get the text field
     const host = window.location.host;
     const pathname = window.location.pathname;
-    copybox.value = host + pathname + "?title=" + curr_title;
+    copybox.value = host + pathname + "?title=" + encodeURIComponent(curr_title);
 
     // Select the text field
     copybox.select();
