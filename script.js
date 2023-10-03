@@ -157,9 +157,10 @@ function incrementTotalRead() {
 
 function copyPoem() {
     // Get the text field
+    const protocol = window.location.protocol;
     const host = window.location.host;
     const pathname = window.location.pathname;
-    copybox.value = host + pathname + "?title=" + encodeURIComponent(curr_title);
+    copybox.value = protocol + "//" + host + pathname + "?title=" + encodeURIComponent(curr_title);
 
     // Select the text field
     copybox.select();
