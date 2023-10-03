@@ -5,11 +5,11 @@ const copybox = document.getElementById("copybox");
 
 main.textContent = "";
 
-let total_read_poems = getCookie("total_read_poems")
-let poems_read = getCookie("poems_read")
-let curr_poem = getCookie("curr_poem")
-let last_time_visited = getCookie("last_time_visited")
-let curr_read = getCookie("curr_read")
+let total_read_poems = getFromLocalStorage("total_read_poems")
+let poems_read = getFromLocalStorage("poems_read")
+let curr_poem = getFromLocalStorage("curr_poem")
+let last_time_visited = getFromLocalStorage("last_time_visited")
+let curr_read = getFromLocalStorage("curr_read")
 
 let curr_text = "";
 
@@ -18,12 +18,12 @@ let curr_title = "";
 
 if (total_read_poems == undefined) {
     total_read_poems = 0;
-    writeCookie("total_read_poems", total_read_poems);
+    writeToLocalStorage("total_read_poems", total_read_poems);
 }
 
 if (poems_read == undefined) {
     poems_read = ",";
-    writeCookie("poems_read", poems_read);
+    writeToLocalStorage("poems_read", poems_read);
 }
 
 if (curr_read != undefined) {
@@ -48,24 +48,20 @@ if (curr_poem == undefined || last_time_visited == undefined || today.toDateStri
         curr_id = id;
         curr_title = title;
         
-        writeCookie("curr_read", curr_read);
-        writeCookie("curr_poem", title);
-        writeCookie("last_time_visited", today.getTime());
+        writeToLocalStorage("curr_read", curr_read);
+        writeToLocalStorage("curr_poem", title);
+        writeToLocalStorage("last_time_visited", today.getTime());
     });
 } else {
     showPoem(curr_poem);
 }
 
-function getCookie(name) {
-    return document.cookie
-        .split("; ")
-        .find((row) => row.startsWith(name + "="))
-        ?.split("=")[1];
+function getFromLocalStorage(name) {
+    return localStorage.getItem(name);
 }
 
-function writeCookie(name, value) {
-    console.log("writing cookie");
-    document.cookie = `${name}=${value};max-age=315360000;`;
+function writeToLocalStorage(name, value) {
+    localStorage.setItem(name, value);
 }
 
 // https://poetrydb.org/author/Geoffrey%20Chaucer/author,title
@@ -146,15 +142,15 @@ async function showRandomPoem() {
 function incrementTotalRead() {
     if (curr_read == undefined || curr_read == 0) {
         total_read_poems++;
-        writeCookie("total_read_poems", total_read_poems);
+        writeToLocalStorage("total_read_poems", total_read_poems);
         count.textContent = total_read_poems;
 
         curr_read = 1;
-        writeCookie("curr_read", curr_read);
+        writeToLocalStorage("curr_read", curr_read);
 
         read_button.disabled = true;
 
-        writeCookie("poems_read", poems_read + curr_id + ",");
+        writeToLocalStorage("poems_read", poems_read + curr_id + ",");
     }
 }
 
