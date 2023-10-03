@@ -42,8 +42,8 @@ if (curr_read != undefined) {
 
 count.textContent = total_read_poems;
 const today = new Date();
-
-if (paramTitle == undefined || curr_poem == undefined || last_time_visited == undefined || today.toDateString() !== new Date(parseInt(last_time_visited)).toDateString()) {
+console.log(paramTitle == null)
+if (paramTitle == null && (curr_poem == undefined || last_time_visited == undefined || today.toDateString() !== new Date(parseInt(last_time_visited)).toDateString())) {
     showRandomPoem().then((res) => {
         let id = res[0];
         let title = res[1];
