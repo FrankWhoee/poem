@@ -15,8 +15,6 @@ let curr_poem = getFromLocalStorage("curr_poem")
 let last_time_visited = getFromLocalStorage("last_time_visited")
 let curr_read = getFromLocalStorage("curr_read")
 
-let curr_text = "";
-
 let curr_id = "";
 let curr_title = "";
 
@@ -42,20 +40,9 @@ if (curr_read != undefined) {
 
 count.textContent = total_read_poems;
 const today = new Date();
-console.log(paramTitle == null)
+
 if (paramTitle == null && (curr_poem == undefined || last_time_visited == undefined || today.toDateString() !== new Date(parseInt(last_time_visited)).toDateString())) {
-    showRandomPoem().then((res) => {
-        let id = res[0];
-        let title = res[1];
-        curr_read = 0;
-
-        curr_id = id;
-        curr_title = title;
-
-        writeToLocalStorage("curr_read", curr_read);
-        writeToLocalStorage("curr_poem", title);
-        writeToLocalStorage("last_time_visited", today.getTime());
-    });
+    showRandomPoem();
 } else if (paramTitle == undefined) {
     showPoem(curr_poem);
 } else if (paramTitle != undefined) {
@@ -72,7 +59,10 @@ function writeToLocalStorage(name, value) {
 
 // https://poetrydb.org/author/Geoffrey%20Chaucer/author,title
 
-async function getID(author, title) {
+async function getID(data) {
+    let author = data["author"];
+    let title = data["title"];
+
     let authors = (await (await fetch(`https://poetrydb.org/author`)).json())["authors"];
     let aid = authors.indexOf(author);
     let titles = (await (await fetch(`https://poetrydb.org/author/${author}/title`)).json());
@@ -84,69 +74,71 @@ async function getID(author, title) {
     return undefined;
 }
 
-async function showPoem(title) {
+async function getRandomPoem() {
+    let response = await fetch("https://poetrydb.org/random");
+    let data = await response.json();
+    return data[0];
+}
+
+async function getPoemByTitle(title) {
     let response = await fetch(`https://poetrydb.org/title/${title}`);
-    let j = await response.json();
-    j = j[0];
+    let data = await response.json();
+    return data[0];
+}
 
-    main.textContent = "";
-
+function renderPoem(data) {
+    main.innerHTML = "";
     let elemTitle = document.createElement("p");
     let elemAuthor = document.createElement("p");
     let linebreak = document.createElement("br");
 
-    elemTitle.textContent = j["title"];
-    elemAuthor.textContent = "by " + j["author"];
+    elemTitle.textContent = data["title"];
+    elemAuthor.textContent = "by " + data["author"];
 
     main.appendChild(elemTitle);
     main.appendChild(elemAuthor);
     main.appendChild(linebreak);
 
-    curr_text += title + "\nby " + j["author"] + "\n\n";
-
-    j["lines"].forEach((line) => {
-        curr_text += line + "\n";
+    data["lines"].forEach((line) => {
         let text = document.createElement("p");
         text.textContent = line;
         main.appendChild(text);
     });
-
-    curr_id = await getID(j["author"], j["title"]);
-    curr_title = await j["title"];
 }
 
+async function showPoem(title) {
+    let data = await getPoemByTitle(title);
+    curr_id = await getID(data);
+    curr_title = await data["title"];
+
+    renderPoem(data);
+}
+
+
+
 async function showRandomPoem() {
-    let response = await fetch("https://poetrydb.org/random");
-    let j = await response.json();
-    j = j[0];
+    let data = await getRandomPoem();
 
-    main.textContent = "";
+    let title = data["title"];
+    let id = await getID(data);
 
-    if (poems_read.includes(await getID(j["author"], j["title"]))) {
-        return showRandomPoem();
+    // Try until we get a poem that hasn't been read
+    while (poems_read.includes(id)) {
+        data = await getRandomPoem();
+        id = await getID(data);
     }
 
-    let title = document.createElement("p");
-    let author = document.createElement("p");
-    let linebreak = document.createElement("br");
+    curr_read = 0;
+    curr_id = id;
+    curr_title = title;
 
-    title.textContent = j["title"];
-    author.textContent = "by " + j["author"];
+    writeToLocalStorage("curr_read", curr_read);
+    writeToLocalStorage("curr_poem", title);
+    writeToLocalStorage("last_time_visited", today.getTime());
 
-    main.appendChild(title);
-    main.appendChild(author);
-    main.appendChild(linebreak);
+    read_button.disabled = false;
 
-    curr_text += j["title"] + "\nby" + j["author"] + "\n\n";
-
-    j["lines"].forEach((line) => {
-        curr_text += line + "\n";
-        let text = document.createElement("p");
-        text.textContent = line;
-        main.appendChild(text);
-    });
-
-    return [await getID(j["author"], j["title"]), j["title"]];
+    renderPoem(data);
 }
 
 function incrementTotalRead() {
