@@ -3,7 +3,11 @@ const count = document.getElementById("count");
 const read_button = document.getElementById("read");
 const copybox = document.getElementById("copybox");
 
-main.textContent = "";
+main.textContent = "Loading..."
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const paramTitle = urlParams.get('title');
 
 let total_read_poems = getFromLocalStorage("total_read_poems")
 let poems_read = getFromLocalStorage("poems_read")
@@ -39,7 +43,7 @@ if (curr_read != undefined) {
 count.textContent = total_read_poems;
 const today = new Date();
 
-if (curr_poem == undefined || last_time_visited == undefined || today.toDateString() !== new Date(parseInt(last_time_visited)).toDateString()) {
+if (paramTitle == undefined || curr_poem == undefined || last_time_visited == undefined || today.toDateString() !== new Date(parseInt(last_time_visited)).toDateString()) {
     showRandomPoem().then((res) => {
         let id = res[0];
         let title = res[1];
@@ -47,13 +51,15 @@ if (curr_poem == undefined || last_time_visited == undefined || today.toDateStri
 
         curr_id = id;
         curr_title = title;
-        
+
         writeToLocalStorage("curr_read", curr_read);
         writeToLocalStorage("curr_poem", title);
         writeToLocalStorage("last_time_visited", today.getTime());
     });
-} else {
+} else if (paramTitle == undefined) {
     showPoem(curr_poem);
+} else if (paramTitle != undefined) {
+    showPoem(paramTitle);
 }
 
 function getFromLocalStorage(name) {
@@ -82,6 +88,8 @@ async function showPoem(title) {
     let response = await fetch(`https://poetrydb.org/title/${title}`);
     let j = await response.json();
     j = j[0];
+
+    main.textContent = "";
 
     let elemTitle = document.createElement("p");
     let elemAuthor = document.createElement("p");
@@ -112,7 +120,9 @@ async function showRandomPoem() {
     let j = await response.json();
     j = j[0];
 
-    if(poems_read.includes(await getID(j["author"], j["title"]))) {
+    main.textContent = "";
+
+    if (poems_read.includes(await getID(j["author"], j["title"]))) {
         return showRandomPoem();
     }
 
@@ -155,13 +165,15 @@ function incrementTotalRead() {
 }
 
 function copyPoem() {
-  // Get the text field
-  copybox.value = curr_text;
+    // Get the text field
+    const host = window.location.host;
+    const pathname = window.location.pathname;
+    copybox.value = host + pathname + "?title=" + curr_title;
 
-  // Select the text field
-  copybox.select();
-  copybox.setSelectionRange(0, 99999); // For mobile devices
+    // Select the text field
+    copybox.select();
+    copybox.setSelectionRange(0, 99999); // For mobile devices
 
-   // Copy the text inside the text field
-  navigator.clipboard.writeText(copybox.value);
+    // Copy the text inside the text field
+    navigator.clipboard.writeText(copybox.value);
 }
