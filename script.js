@@ -1,4 +1,4 @@
-let main, count, read_button, copybox, shortOnlyElem;
+let main, count, read_button, copybox, shortOnlyElem, curr_id, curr_title
 
 let total_read_poems = getFromLocalStorage("total_read_poems")
 let poems_read = getFromLocalStorage("poems_read")
@@ -29,8 +29,8 @@ window.addEventListener('DOMContentLoaded', () => {
     const paramTitle = urlParams.get('title');
 
 
-    let curr_id = "";
-    let curr_title = "";
+    curr_id = "";
+    curr_title = "";
 
     if (total_read_poems == undefined) {
         total_read_poems = 0;
