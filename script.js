@@ -2,6 +2,7 @@ const main = document.getElementById("main");
 const count = document.getElementById("count");
 const read_button = document.getElementById("read");
 const copybox = document.getElementById("copybox");
+const shortOnlyElem = document.getElementById("shortonly");
 
 main.textContent = "Loading..."
 
@@ -14,6 +15,7 @@ let poems_read = getFromLocalStorage("poems_read")
 let curr_poem = getFromLocalStorage("curr_poem")
 let last_time_visited = getFromLocalStorage("last_time_visited")
 let curr_read = getFromLocalStorage("curr_read")
+let short_only = getFromLocalStorage("short_only")
 
 let curr_id = "";
 let curr_title = "";
@@ -28,6 +30,11 @@ if (poems_read == undefined) {
     writeToLocalStorage("poems_read", poems_read);
 }
 
+if (short_only == undefined) {
+    short_only = true;
+    writeToLocalStorage("short_only", short_only);
+}
+
 if (curr_read != undefined) {
     curr_read = parseInt(curr_read);
     if (curr_read == 1) {
@@ -35,6 +42,12 @@ if (curr_read != undefined) {
     } else {
         read_button.disabled = false;
     }
+}
+
+if (short_only) {
+    shortOnlyElem.checked = true;
+} else {
+    shortOnlyElem.checked = false;
 }
 
 
@@ -121,8 +134,8 @@ async function showRandomPoem() {
     let title = data["title"];
     let id = await getID(data);
 
-    // Try until we get a poem that hasn't been read
-    while (poems_read.includes(id)) {
+    // Try until we get a poem that hasn't been read and is the right length
+    while (poems_read.includes(id) || (short_only && data["lines"].length > 30)) {
         data = await getRandomPoem();
         id = await getID(data);
     }
@@ -168,4 +181,9 @@ function copyPoem() {
 
     // Copy the text inside the text field
     navigator.clipboard.writeText(copybox.value);
+}
+
+function toggleShortOnly(){
+    short_only = shortOnlyElem.checked;
+    writeToLocalStorage("short_only", short_only);
 }
