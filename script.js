@@ -67,7 +67,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     count.textContent = total_read_poems;
     const today = new Date();
-
     if (paramTitle == null && (curr_poem == undefined || last_time_visited == undefined || today.toDateString() !== new Date(parseInt(last_time_visited)).toDateString())) {
         showRandomPoem();
     } else if (paramTitle == undefined) {
@@ -149,6 +148,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 console.log("Too long: " + title);
             }
             data = await getRandomPoem();
+            title = data["title"];
             id = await getID(data);
         }
 
