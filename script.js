@@ -140,16 +140,21 @@ window.addEventListener('DOMContentLoaded', () => {
         let title = data["title"];
         let id = await getID(data);
 
+        let retries = 1;
+
         // Try until we get a poem that hasn't been read and is the right length
         while (poems_read.includes(id) || (short_only && data["lines"].length > 30)) {
             if (poems_read.includes(id)) {
+                main.textContent = "Loaded a poem that has already been read. Trying again... (" + retries + ")";
                 console.log("Already read poem: " + title);
             } else {
+                main.textContent = "Loaded a poem that is too long. Trying again... (" + retries + ")";
                 console.log("Too long: " + title);
             }
             data = await getRandomPoem();
             title = data["title"];
             id = await getID(data);
+            retries++;
         }
 
         curr_read = 0;
