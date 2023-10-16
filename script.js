@@ -75,9 +75,8 @@ window.addEventListener('DOMContentLoaded', () => {
         showPoem(paramTitle);
     }
 
-
-// https://poetrydb.org/author/Geoffrey%20Chaucer/author,title
-
+    // Hi, if you're reading this, I'm aware that this is probably not a very reliable way to ID a poem.
+    // I'll think of something later. Or you can make a PR! :D
     async function getID(data) {
         let author = data["author"];
         let title = data["title"];
