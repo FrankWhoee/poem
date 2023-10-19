@@ -101,6 +101,13 @@ window.addEventListener('DOMContentLoaded', () => {
     async function getPoemByTitle(title) {
         let response = await fetch(`https://poetrydb.org/title/${title}`);
         let data = await response.json();
+        if (data.length > 1) {
+            for (let i = 0; i < data.length; i++) {
+                if (data[i]["title"] === title) {
+                    return data[i];
+                }
+            }
+        }
         return data[0];
     }
 
